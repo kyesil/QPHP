@@ -3,14 +3,15 @@
 
 
 function s($key, $val, $ttl = 10) {
-    return apcu_store($key, $val, $ttl);
+   // return apcu_store($key, $val, $ttl);
 }
 
 function g($key) {
-    return apcu_fetch($key);
+   // return apcu_fetch($key);
 }
 
 function langt($param) {
+    if(!isset($_SESSION)) return;
     $kk = "lang_$_SESSION[_langid]_data";
     if (isset($GLOBALS[$kk])){
         $ldata = $GLOBALS[$kk];  
