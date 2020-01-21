@@ -2,9 +2,9 @@
 class SvcJsonC extends Y_Controller
 {
 
-  function init()
+  function _init()
   {
-    $this->autoRender = false; // disable render for api
+    $this->autoRender = false; // disable view render for api
 
     header('Content-Type: application/json');
     header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

@@ -1,35 +1,46 @@
 <?php
 
-abstract class Y_Controller {
+abstract class Y_Controller
+{
 
-   public $route = [];
    public $viewdata = [];
    public $autoRender = true;
+   public $view;
+   public $action;
+   public $controller;
+   public $class;
 
-   function __construct($param) {
-      $this->route = $param;
+   function __construct($param)
+   {
+      $this->controller = $param[1];
+      $this->class = $param[0];
+      $this->view = $param[1] . '/' . $param[2].'.phtml';
+      $this->action =$param[2];
       $this->router();
    }
 
-   private function router() {
-      if (method_exists($this, 'init'))
-         call_user_func_array(array($this, 'init'), []);
-      if (class_exists($this->route[0])) {
+   private function router()
+   {
+      if (method_exists($this, '_init'))
+         call_user_func_array(array($this, '_init'), []);
+      if (class_exists($this->class)) {
 
-         if (method_exists($this, $this->route[2])) {
-            call_user_func_array(array($this, $this->route[2]), []);
+         if (method_exists($this, $this->action)) {
+            call_user_func_array(array($this, $this->action), []);
             if ($this->autoRender)
-               $this->view($this->route[1] . '/' . $this->route[2], $this->viewdata);
+               $this->renderview($this->view, $this->viewdata);
+
          } else
-            echo "404: method not found " . $this->route[0] . '>' . $this->route[2];
+            exit("404: method not found: " . $this->class . '>' .$this->action);
       } else
-         echo "404: class not found " . $this->route[0];
+      exit("404: class not found: " . $this->class);
    }
 
-   function view($path, $data) {
+   public function renderview($path, $data)
+   { 
+      if(!file_exists(V_PATH.$this->view ))  exit("404: view not found: " . $this->view );
       if (is_array($data))
          extract($data);
-      require(V_PATH  . $path . '.phtml');
+      require(V_PATH  . $path );
    }
-
 }

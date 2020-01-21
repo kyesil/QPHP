@@ -1,18 +1,17 @@
 <?php
 class HomeC extends Y_Controller
 {
-  public $autoView = false;
-
-  function init()
+ 
+  function _init()
   { // initially run this method before actions 
   }
   public function home()
   {
-    $this->viewdata['TITLE'] = "HOME";
+    $this->viewdata['vData'] = "hello view data "; //send data to view
   }
 
-  public function pages()
+  public function contact()
   {
-    $this->viewdata['TITLE'] = "Page";
+    $this->viewdata['vData'] = "hello view data "; //send data to view
   }
 }

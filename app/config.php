@@ -1,4 +1,3 @@
 <?php
-
-define('Y_AUTOVIEW', 'default');
-//  ex: $Y_AUTOVIEW="default";
+define ('BASE_PATH', 'tt'); // sub dir
+define('Y_DCONT', 'default'); // default controller preselect
