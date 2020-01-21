@@ -23,8 +23,7 @@ class Y_APP
    function start()
    {
       if (!empty(BASE_URL)) {
-         $up = substr(URI_PATH, strlen(BASE_URL)+1);
-         define('SUB_PATH', explode('/', URI_PATH)[1]);
+         $up = substr(URI_PATH, strlen(BASE_URL)+1);//remove first chars 
       } else $up = URI_PATH;
       $route = explode('/', strtolower($up));
 
@@ -44,7 +43,7 @@ class Y_APP
       if (file_exists(C_PATH . $route[1] . '.php')) {
          require(C_PATH . $route[1] . '.php');
          return new $route[0]($route);
-      } else {
-      }
+      } else 
+         exit("404: controller file not found: " . C_PATH . $route[1] . '.php');
    }
 }
