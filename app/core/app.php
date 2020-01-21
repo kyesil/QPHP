@@ -20,16 +20,15 @@ class Y_APP
       require_once APP_PATH . '/core/controller.php';
    }
 
-
-
    function start()
    {
       if (!empty(BASE_URL)) {
-         $up = substr(URI_PATH, strlen(BASE_URL));
+         $up = substr(URI_PATH, strlen(BASE_URL)+1);
+         define('SUB_PATH', explode('/', URI_PATH)[1]);
       } else $up = URI_PATH;
       $route = explode('/', strtolower($up));
 
-      if (Y_DCONT == false) {
+      if (DEFAULT_CONT == false) {
          if (empty($route[1]))
             $route[1] = 'home';
          if (empty($route[2]))
@@ -38,7 +37,7 @@ class Y_APP
          if (empty($route[1]))  $route[2] = "home";
          else
             $route[2] = $route[1];
-         $route[1] = Y_DCONT;
+         $route[1] = DEFAULT_CONT;
       }
       $route[0] = $route[1] . 'C';
 

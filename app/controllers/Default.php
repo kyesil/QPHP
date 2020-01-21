@@ -1,6 +1,6 @@
 <?php
 class DefaultC extends Y_Controller
-{
+{//this controller can be use with default look:controller in app/config.php
   function _init()
   { // initially run this method before actions 
     $this->action = "default";
@@ -12,5 +12,4 @@ class DefaultC extends Y_Controller
 
     $this->viewdata['vData'] = "hello view data "; //send data to view
   }
-   /// this controller can be set autoView from config. See /app/config.php
 }
