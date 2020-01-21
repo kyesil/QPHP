@@ -30,8 +30,8 @@ class Y_APP
 
    function start()
    {
-      if (!empty(BASE_PATH)) {
-         $up = substr(URI_PATH, strlen(BASE_PATH));
+      if (!empty(BASE_URL)) {
+         $up = substr(URI_PATH, strlen(BASE_URL));
       } else $up = URI_PATH;
       $route = explode('/', strtolower($up));
 

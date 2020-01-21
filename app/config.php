@@ -1,3 +1,3 @@
 <?php
-define ('BASE_PATH', 'tt'); // sub dir
-define('Y_DCONT', 'default'); // default controller preselect
+define ('BASE_URL', ''); // it just delete as many chars as parameter length. 
+define('Y_DCONT', ''); // default controller preselect
