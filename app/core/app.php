@@ -2,16 +2,10 @@
 
 class Y_APP
 {
-
-
-
    function __construct()
    {
-      define('APP_PATH', PATH . '/app');
       include APP_PATH . '/config.php';
       require_once APP_PATH . '/BootH.php';
-
-
 
       define("C_PATH", APP_PATH . '/controllers/');
       define("L_PATH", APP_PATH . '/library/');
@@ -23,7 +17,7 @@ class Y_APP
       define("URI", $_SERVER['REQUEST_URI']);
       define("URI_PATH", parse_url(URI, PHP_URL_PATH));
 
-      require_once PATH . '/core/controller.php';
+      require_once APP_PATH . '/core/controller.php';
    }
 
 
