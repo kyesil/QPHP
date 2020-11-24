@@ -5,7 +5,7 @@ class Y_APP
    function __construct()
    {
       include APP_PATH . '/config.php';
-      require_once APP_PATH . '/BootH.php';
+      require_once APP_PATH . '/bootH.php';
 
       define("C_PATH", APP_PATH . '/controllers/');
       define("L_PATH", APP_PATH . '/library/');
