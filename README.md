@@ -1,10 +1,21 @@
-# phprouter
-Basic PHP 7+ MVC based  framework. embedded sample inside.
+# QPHP MVC Based Api Router
+QUICK PHP 7+ MVC based router for create api. nginx or apache2
 # Specs
+- Create a service api controller. looks like standard MVC 
 - Support base URL/PATH like www.example.com/en/home/home or  www.example.com/mydir/home/home. look here: app/config.php
-- Support auto default controller or/and action example www.example.com/ means home controller and home action.
-- Support default controller look here: app/config.php. if set a default controller you can select only actions with url in the controller. 
-- Support send variables action to views.
+- Support default controller or/and action example www.example.com/ means home controller and home action.
+- Support preselect controller. route only one controller's actions 
+- Support send variables to views form actions.
 - Render custom view
 - Execute custom action
-- Disable auto render for create a service api.
+- Create a service api controller.
+# Install
+PHP 7+ Apache2 or Nginx
+
+- for ngnix: put your server{} tag inside :
+```
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+```
+- for apache ready (look .htaccess file)

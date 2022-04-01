@@ -1,11 +1,10 @@
 <?php
 
-class Y_APP
+class Q_APP
 {
    function __construct()
    {
       include APP_PATH . '/config.php';
-      require_once APP_PATH . '/bootH.php';
 
       define("C_PATH", APP_PATH . '/controllers/');
       define("L_PATH", APP_PATH . '/library/');
@@ -23,7 +22,7 @@ class Y_APP
    function start()
    {
       if (!empty(BASE_URL)) {
-         $up = substr(URI_PATH, strlen(BASE_URL)+1);//remove first chars 
+         $up = substr(URI_PATH, strlen(BASE_URL)+1);//remove first char
       } else $up = URI_PATH;
       $route = explode('/', strtolower($up));
 

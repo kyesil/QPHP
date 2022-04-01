@@ -1,10 +1,11 @@
 <?php
-include APP_PATH . '/views/_parts/_head.phtml';
+var_dump($this);
+include V_PATH . '/_parts/_head.phtml';
 ?>
 
 <h3>Hello view: home/home</h3>
-<h3>view data: <?=$vData?></h3>
-<h3>SUB_PATH: <?=defined ('SUB_PATH')?SUB_PATH:'not defined';?></h3>
+<h3>view data: <?=$myvar?></h3>
+<h3>hash: <?=password_hash("sdfsdf", PASSWORD_BCRYPT,array("salt" => "sdsd"));?></h3>
 <?php
-include APP_PATH . '/views/_parts/_footer.phtml';
+include V_PATH . '/_parts/_footer.phtml';
 ?>

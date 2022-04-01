@@ -1,17 +1,19 @@
 <?php
-class HomeC extends Y_Controller
+class HomeC extends Q_Controller
 {
- 
   function _init()
-  { // initially run this method before actions 
+  { 
+    // initially run this method before actions 
   }
   public function home()
   {
-    $this->viewdata['vData'] = "hello view data "; //send data to view
+    $this->viewVars['myvar'] = "hello home"; //send data to view
+    $this->renderview();
   }
 
-  public function contact()
+  public function page2()
   {
-    $this->viewdata['vData'] = "hello view data "; //send data to view
+    $this->viewVars['myvar'] = "hello page2"; //send data to view
+    
   }
 }
