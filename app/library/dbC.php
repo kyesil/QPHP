@@ -31,44 +31,27 @@ class dbC
   }
 
   /** escape string */
-  public static function escape($value)
+  public static function escapeFields($value)
   {
-    return preg_replace('/[^a-zA-Z_]*/', '', $value);
+    return preg_replace('/[^A-Za-z0-9_]/', '', $value);
   }
 
 
-  /** return escaped params for pdo like this : "field1=:field1,field2=:field2" */
+  /** return escaped params for pdo like this : "field1=:field1,field2=:field2"  */
   public static function getSetFields($q)
   {
     $fields = '';
     if (is_array($q))
       foreach ($q as $k => $v) {
         if ($k[0] == '_') continue;
-        $k = dbC::escape($k);
+        $k = dbC::escapeFields($k);
         $fields .= "$k =:$k,";
       }
     $fields = rtrim($fields, ',');
     return $fields;
   }
 
-  /** return escaped params for pdo like this : "field1='value1',field2='value1'" */
-  public static function getValueFields($q)
-  {
-    $fields = '';
-    if (is_array($q))
-      foreach ($q as $k => $v) {
-        if ($k[0] == '_') continue;
-        $k = dbC::escape($k);
-        $v = dbC::escape($v);
-        if ($v == "NaN") $v = "NULL";
-        else $v = "'$v'";
-        $fields .= "$k =$v,";
-      }
-    $fields = rtrim($fields, ',');
-    return $fields;
-  }
-
-  /** return escaped params for pdo like this : "(field1,field2,field2) VALUES (:field1,:field2,:field2)" */
+  /** return escaped params for pdo like this : "(field1,field2,field2) VALUES (:field1,:field2,:field2)"  */
   public static function getInsertFields($q)
   {
     $fields = '';
@@ -76,7 +59,7 @@ class dbC
     if (is_array($q))
       foreach ($q as $k => $v) {
         if ($k[0] == '_') continue;
-        $k = dbC::escape($k);
+        $k = dbC::escapeFields($k);
         $fields .= "$k,";
         $values .= ":$k,";
       }
@@ -84,19 +67,44 @@ class dbC
     $values = rtrim($values, ',');
     return '(' . $fields . ') VALUES (' . $values . ')';
   }
-  public static function escapeArray($q)
-  {
-    $result = [];
-    if (is_array($q))
-      foreach ($q as $k => $v) {
-        if ($k[0] != '_') {
-          $k = dbC::escape($k);
-          $v = dbC::escape($v);
-        }
-        $result[$k] = $v;
-      }
-    return $result;
-  }
+
+  // public static function escapeValues($value)
+  // {
+  //   return addslashes($value);
+  // }
+
+
+  /** return escaped params for pdo like this : "field1='value1',field2='value1'" */
+  // public static function getValueFields($q)
+  // {
+  //   $fields = '';
+  //   if (is_array($q))
+  //     foreach ($q as $k => $v) {
+  //       if ($k[0] == '_') continue;
+  //       $k = dbC::escapeFields($k);
+  //       $v = dbC::escapeValues($v);
+  //       if ($v == "NaN") $v = "NULL";
+  //       else $v = "'$v'";
+  //       $fields .= "$k =$v,";
+  //     }
+  //   $fields = rtrim($fields, ',');
+  //   return $fields;
+  // }
+
+
+  // public static function escapeArray($q)
+  // {
+  //   $result = [];
+  //   if (is_array($q))
+  //     foreach ($q as $k => $v) {
+  //       if ($k[0] != '_') {
+  //         $k = dbC::escapeFields($k);
+  //         $v = dbC::escapeValues($v);
+  //       }
+  //       $result[$k] = $v;
+  //     }
+  //   return $result;
+  // }
 
 
   public function exec($sql, $params)
@@ -117,7 +125,8 @@ class dbC
   {
     try {
       $r = [];
-      $r['ar'] = $this->exec($sql, $params);
+      $this->exec($sql, $params);
+      $r['ar'] = $this->stm->rowCount();
       $r['li'] = $this->pdo->lastInsertId();
     } catch (PDOException $e) {
       $r = $this->getError($e);

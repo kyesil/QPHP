@@ -1,5 +1,4 @@
 <?php
-
 class Q_APP
 {
    function __construct()
@@ -9,7 +8,7 @@ class Q_APP
       define("C_PATH", APP_PATH . '/controllers/');
       define("L_PATH", APP_PATH . '/library/');
       define("V_PATH", APP_PATH . '/views/');
-      define("M_PATH", APP_PATH . '/modals/');
+      define("M_PATH", APP_PATH . '/models/');
       set_include_path(L_PATH . PATH_SEPARATOR . M_PATH); // auto loadt libs & modals
       spl_autoload_register();
 

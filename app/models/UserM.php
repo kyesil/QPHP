@@ -3,6 +3,7 @@
 class UserM
 {
 
+  public $id;
   public $name;
   public $email;
 
@@ -12,10 +13,6 @@ class UserM
     $this->name=$name;
     $this->name=$email;
   }
-  public static function getDB()
-  {
-    if (!$db = new dbC()) phpH::err(-1);
-    return $db;
-  }
+
 
 }
