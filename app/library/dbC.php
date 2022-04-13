@@ -1,12 +1,11 @@
 <?php
-
 class dbC
 {
 
   public $pdo;
   public $stm;
 
-  public function __construct($host = DB_HOST, $dbname = DB_DB, $user = DB_USER, $pass = DB_PASS)
+  public function __construct( $dbname = DB_DB, $host = DB_HOST,$user = DB_USER, $pass = DB_PASS)
   {
     try {
       $this->pdo = new PDO(
@@ -22,9 +21,9 @@ class dbC
     }
     return $this->pdo;
   }
-  public static function getDB()
+  public static function getDB($db=DB_DB)
   {
-    $db = new dbC();
+    $db = new dbC($db);
 
     if (!$db->pdo)  phpH::err('err_db_conn', 501);
     return $db;
@@ -45,7 +44,7 @@ class dbC
       foreach ($q as $k => $v) {
         if ($k[0] == '_') continue;
         $k = dbC::escapeFields($k);
-        $fields .= "$k =:$k,";
+        $fields .= " $k= :$k,";
       }
     $fields = rtrim($fields, ',');
     return $fields;
@@ -111,14 +110,17 @@ class dbC
   {
     $this->stm = $this->pdo->prepare($sql);
     if (is_array($params))
+    { 
+      $pass=[];
       foreach ($params as $k => $v) {
-        if (strpos($sql, $k) === false) {
-          unset($params[$k]);
+        if (strpos($sql, ':'.$k) === false) {
           continue;
         }
+        $pass[$k]=$v;
         $this->stm->bindParam(':' . $k, $v);
       }
-    $r = $this->stm->execute($params);
+    } 
+    $r = $this->stm->execute($pass);
     return $r;
   }
   public function set($sql, $params = null)
