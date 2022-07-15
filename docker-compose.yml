@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  qphp:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    container_name: qphp
+    ports:
+      - '8802:8802'
+    volumes:
+      - ./:/app
+  

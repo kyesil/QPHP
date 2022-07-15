@@ -1,4 +1,15 @@
 <?php
+function qwput(...$args)
+{
+  foreach ($args as $arg) {
+    if (is_object($arg) || is_array($arg) || is_resource($arg)) {
+      $output = print_r($arg, true);
+    } else {
+      $output = (string) $arg;
+    }
+    fwrite(fopen('php://stdout', 'w'), $output."\n");
+  }
+}
 class Q_APP
 {
    function __construct()
@@ -41,7 +52,9 @@ class Q_APP
       if (file_exists(C_PATH . $route[1] . '.php')) {
          require(C_PATH . $route[1] . '.php');
          return new $route[0]($route);
-      } else 
+      } else
          exit("404: controller file not found: " . C_PATH . $route[1] . '.php');
    }
 }
+
+

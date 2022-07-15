@@ -21,7 +21,7 @@ class SvcC extends Q_Controller
 
   public function set()
   {
-    $q=["id"=>"12","name" => "roon&ey ","title"=>"hell'o"];
+    $q=["id"=>"12","name" => "roon&ey ","title"=>"hell'o"]; // $q=$_POST;
     $db = dbC::getDB();
 
     //method 2 secure way
