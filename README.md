@@ -19,7 +19,7 @@ PHP 7+ required.
 
 # Usage with PHP Built-in Server 
 - php -S localhost:80 -t ./
-or work with our router for custom redirects look router.php
+- or work with our router for custom redirects look router.php :
 - php -S localhost:80 router.php
 
 # Usage with Nginx 
