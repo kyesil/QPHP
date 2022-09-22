@@ -7,13 +7,13 @@ class HomeC extends Q_Controller
   }
   public function home()
   {
-    $this->viewVars['myvar'] = "hello home"; //send data to view
-    $this->renderview();
+    $this->viewVars['myvar'] = "hello viewvar"; //send var to view
+   
   }
 
   public function page2()
   {
-    $this->viewVars['myvar'] = "hello page2"; //send data to view
+    $this->viewVars['myvar'] = "hello page2"; //send var to view
     
   }
 }

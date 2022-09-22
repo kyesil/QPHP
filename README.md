@@ -13,14 +13,15 @@ QUICK PHP 7+ MVC based router for create api. Works with :
 - Support send variables to views form actions.
 - Render custom view
 - Execute custom action
+- Multi language support from json file. look config.php file. For set and start language: look controllers/_main.php  file 
 
 # Install
 PHP 7+ required. 
 
 # Usage with PHP Built-in Server 
-- php -S localhost:80 -t ./
+- php -S localhost:8081 -t ./
 - or work with our router for custom redirects look router.php :
-- php -S localhost:80 router.php
+- php -S localhost:8081 router.php
 
 # Usage with Nginx 
 - for ngnix: put your server{} tag inside :

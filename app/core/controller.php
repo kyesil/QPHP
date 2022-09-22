@@ -9,18 +9,32 @@ abstract class Q_Controller
    public $action;
    public $controller;
    public $class;
+   public $paths;
+   public $pathlang;
 
-   function __construct($param)
+   function __construct($cont, $action, $class, $paths, $pathlang)
    {
-      $this->controller = $param[1];
-      $this->class = $param[0];
+      $this->controller = $cont;
+      $this->class = $class;
+      $this->action = $action;
+      $this->paths = $paths;
+      $this->pathlang = $pathlang;
 
-      $this->action = $param[2];
-      $this->router();
+      try {
+         $this->router();
+      } catch (\Throwable $th) {
+         $this->exit($th, 500);
+      }
    }
 
    private function router()
    {
+      if (file_exists(C_PATH . '_main.php')) {
+
+         include(C_PATH . '_main.php');
+         if (function_exists('_main'))
+            call_user_func_array('_main', [$this]);
+      }
       if (method_exists($this, '_init'))
          call_user_func_array(array($this, '_init'), []);
       if (class_exists($this->class)) {
@@ -31,6 +45,7 @@ abstract class Q_Controller
             $this->exit("404: method not found: " . $this->class . '>' . $this->action, 404);
       } else
          $this->exit("404: class not found: " . $this->class, 404);
+      if ($this->autoRender) $this->renderview();
    }
 
    public function renderview($view = null, $vars = null)
@@ -61,6 +76,6 @@ abstract class Q_Controller
    public function exit($msg, $code = 200)
    {
       http_response_code($code);
-      exit($msg);
+      exit('<pre>' . $msg . '</pre> ');
    }
 }

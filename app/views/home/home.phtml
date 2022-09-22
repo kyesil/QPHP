@@ -1,9 +1,10 @@
 <?php
-var_dump($this);
 include V_PATH . '/_parts/_head.phtml';
 ?>
 
-<h3>Hello view: home/home</h3>
+<h3><?=LH::t('sweet_home')?>: home/home </h3>
+<h3><?=LH::t('my_home')?> </h3>
+<h3><?=LH::t('my_homsde')?> </h3>
 <h3>view data: <?=$myvar?></h3>
 <h3>hash: <?=password_hash("pass", PASSWORD_BCRYPT);?></h3>
 <?php

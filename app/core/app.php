@@ -1,14 +1,14 @@
 <?php
 function qwput(...$args)
 {
-  foreach ($args as $arg) {
-    if (is_object($arg) || is_array($arg) || is_resource($arg)) {
-      $output = print_r($arg, true);
-    } else {
-      $output = (string) $arg;
-    }
-    fwrite(fopen('php://stdout', 'w'), $output."\n");
-  }
+   foreach ($args as $arg) {
+      if (is_object($arg) || is_array($arg) || is_resource($arg)) {
+         $output = print_r($arg, true);
+      } else {
+         $output = (string) $arg;
+      }
+      fwrite(fopen('php://stdout', 'w'), $output . "\n");
+   }
 }
 class Q_APP
 {
@@ -32,29 +32,34 @@ class Q_APP
    function start()
    {
       if (!empty(BASE_URL)) {
-         $up = substr(URI_PATH, strlen(BASE_URL)+1);//remove first char
-      } else $up = URI_PATH;
-      $route = explode('/', strtolower($up));
-
-      if (DEFAULT_CONT == false) {
-         if (empty($route[1]))
-            $route[1] = 'home';
-         if (empty($route[2]))
-            $route[2] = 'home';
-      } else {
-         if (empty($route[1]))  $route[2] = "home";
-         else
-            $route[2] = $route[1];
-         $route[1] = DEFAULT_CONT;
+         $url = substr(URI_PATH, strlen(BASE_URL) ); //remove first char
+      } else $url = URI_PATH; 
+      
+      $pathlang=null;
+      if (LANG_PATH) {
+         $pathlang = substr($url , 1,2); 
+         $url = substr($url , 3);  //remove /en
+      
       }
-      $route[0] = $route[1] . 'C';
+      $paths = explode('/', strtolower($url));
+      $cont = INDEX_PATH;
+      $action = INDEX_PATH;
 
-      if (file_exists(C_PATH . $route[1] . '.php')) {
-         require(C_PATH . $route[1] . '.php');
-         return new $route[0]($route);
+      if (DEFAULT_CONT != '') {
+         $cont = DEFAULT_CONT;
+         if (!empty($paths[2]))
+            $action = $paths[2];
+      } else {
+         if (!empty($paths[1]))
+            $cont = $paths[1];
+         if (!empty($paths[2]))
+            $action = $paths[2];
+      }
+      $contClass = $cont . 'C';
+      if (file_exists(C_PATH . $cont  . '.php')) {
+         require(C_PATH . $cont . '.php');
+         return new $contClass($cont, $action, $contClass, $paths,$pathlang);
       } else
-         exit("404: controller file not found: " . C_PATH . $route[1] . '.php');
+         exit("404: controller file not found: " . C_PATH . $cont . '.php');
    }
 }
-
-

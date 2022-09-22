@@ -39,4 +39,12 @@ class SvcC extends Q_Controller
 
     phpH::json($data);
   }
+  public function home()
+  {
+
+    $user= new UserM("ali","ali@local");
+
+    phpH::json($user);
+  }
+
 }

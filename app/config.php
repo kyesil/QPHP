@@ -1,6 +1,10 @@
 <?php
-define('BASE_URL', ''); // it just delete as many chars as BASE_URL length from start.
-define('DEFAULT_CONT', ''); // default controller preselect for single controller usage. for example /page1, /page2 ... 
+define('BASE_URL', ''); // it just delete as many chars as BASE_URL length from the start. for example /blog:  path rendering igrore /blog path
+define('DEFAULT_CONT', ''); // default controller preselect for single controller usage. for example actions: /page1, /page2 ...  with same controller 
+define('LANG_PATH', false); //  if path like : /en/home/page2 > it's ignore first path 2 chars (/en/) 
+
+define('INDEX_PATH', 'home');
+define('LANG_FOLDER',PATH. '/langs/');
 
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');

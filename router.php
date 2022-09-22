@@ -1,4 +1,5 @@
 <?php
+//this router run like apache. it can route alias to another folder.
 
 $urls = parse_url($_SERVER['REQUEST_URI']);
 DEFINE('R_PATH',  $urls['path']);
