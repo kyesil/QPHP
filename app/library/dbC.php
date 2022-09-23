@@ -4,6 +4,9 @@ class dbC
 
   public $pdo;
   public $stm;
+  public $dbname;
+  public static dbC $current;
+  public static  $currentDB;
   public function __construct($dbname = DB_DB, $host = DB_HOST, $user = DB_USER, $pass = DB_PASS)
   {
     try {
@@ -11,26 +14,67 @@ class dbC
         "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
         $user,
         $pass,
-        array(
+        [
           PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
           PDO::MYSQL_ATTR_INIT_COMMAND => "SET @@sql_mode='';"
-        )
+        ]
       );
     } catch (PDOException $e) {
     }
     return $this->pdo;
   }
-  public static function getDB($db = DB_DB)
+  public static function getDB($dbname = DB_DB)
   {
-    $db = new dbC($db);
-
-    if (!$db->pdo)  phpH::err('err_db_conn', 501);
-    return $db;
+    if (!isset(dbC::$current->pdo) ||  dbC::$currentDB != $dbname) {
+      dbC::$current = new dbC($dbname);
+      dbC::$currentDB = $dbname; //TODO : switch database query
+      if (!dbC::$current->pdo)  phpH::err('err_db_conn', 501);
+    }
+    return dbC::$current;
   }
 
-
+  public function bindParam($k, $v)
+  {
+    if (is_int($v))
+      $this->stm->bindParam(':' . $k, $v, PDO::PARAM_INT);
+    elseif (is_string($v))
+      $this->stm->bindParam(':' . $k, $v, PDO::PARAM_STR);
+    elseif (is_bool($v))
+      $this->stm->bindParam(':' . $k, $v, PDO::PARAM_BOOL);
+    else
+      $this->stm->bindParam(':' . $k, $v);
+  }
 
   public function exec($sql, $params)
+  {
+
+
+    $matches = null;
+    preg_match_all("/(\:[A-z]\w+)(?![^\{]*\})(?![^\[]*\])/", $sql, $matches);
+    //preg_match_all("/(\:[A-z]\w+)(?=([^'\\]*(\\.|'([^'\\]*\\.)*[^'\\]*'))*[^']*$)/", $sql, $matches);
+
+    $this->stm = $this->pdo->prepare($sql);
+    if (isset($matches) && is_array($matches[0])) {
+      $pass = [];
+      foreach ($matches[0] as $i => $k) {
+        // echo "\n".$k."\n";
+        $k = ltrim($k, ':');
+        if (isset($params[$k])) {
+          $pass[':' . $k] = $params[$k];
+          $this->bindParam($k, $params[$k]);
+        } else {
+          $this->bindParam($k, '');
+          $pass[$k] = '';
+        }
+      }
+    }
+
+    $r = $this->stm->execute();
+    //$r = $this->stm->execute();
+
+    return $r;
+  }
+  public function exec_old($sql, $params)
   {
     $this->stm = $this->pdo->prepare($sql);
     if (is_array($params)) {
@@ -43,6 +87,7 @@ class dbC
         $this->stm->bindParam(':' . $k, $v);
       }
     }
+    // var_dump($pass);
     $r = $this->stm->execute($pass);
     return $r;
   }
@@ -72,7 +117,8 @@ class dbC
   public function get($sql, $params = null)
   {
     try {
-      $this->exec($sql, $params);
+
+      $r = $this->exec($sql, $params);
       $r = $this->stm->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
       $r = $this->getError($e);
@@ -95,7 +141,18 @@ class dbC
   {
     return ['err' => $e->getCode(), 'msg' => $e->getMessage()];
   }
-
+  public function getGroup($sql, $pkey, $pval, $params = null)
+  {
+    $r = [];
+    try {
+      $this->exec($sql, $params);
+      while ($row = $this->stm->fetch(PDO::FETCH_ASSOC))
+        $r[$row[$pkey]] = $row[$pval];
+    } catch (PDOException $e) {
+      $r = $this->getError($e);
+    }
+    return $r;
+  }
 
 
   /** escape string */
