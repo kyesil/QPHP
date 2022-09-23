@@ -39,7 +39,6 @@ class Q_APP
       if (LANG_PATH) {
          $pathlang = substr($url , 1,2); 
          $url = substr($url , 3);  //remove /en
-      
       }
       $paths = explode('/', strtolower($url));
       $cont = INDEX_PATH;
@@ -47,8 +46,8 @@ class Q_APP
 
       if (DEFAULT_CONT != '') {
          $cont = DEFAULT_CONT;
-         if (!empty($paths[2]))
-            $action = $paths[2];
+         if (!empty($paths[1]))
+            $action = $paths[1];
       } else {
          if (!empty($paths[1]))
             $cont = $paths[1];

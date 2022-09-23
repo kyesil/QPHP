@@ -1,9 +1,10 @@
 <?php
 define('BASE_URL', ''); // it just delete as many chars as BASE_URL length from the start. for example /blog:  path rendering igrore /blog path
-define('DEFAULT_CONT', ''); // default controller preselect for single controller usage. for example actions: /page1, /page2 ...  with same controller 
-define('LANG_PATH', false); //  if path like : /en/home/page2 > it's ignore first path 2 chars (/en/) 
+define('DEFAULT_CONT', ''); // default controller preselect for  controller. for example actions: /page1, /page2 ...  with same controller  and if missing action run name of controller method
+define('AUTO_RENDER_VIEW', true); // auto render phtml  file in  views folder which matc controller/action.phtml
+define('INDEX_PATH', 'home'); // if missing controller or action in url  it select home/home action and view
 
-define('INDEX_PATH', 'home');
+define('LANG_PATH', false); //  if path like : /en/home/page2 > it's ignore first path 2 chars (/en/) 
 define('LANG_FOLDER',PATH. '/langs/');
 
 define('DB_HOST', '127.0.0.1');

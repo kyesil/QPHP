@@ -8,6 +8,7 @@ class HomeC extends Q_Controller
   public function home()
   {
     $this->viewVars['myvar'] = "hello viewvar"; //send var to view
+    $this->viewVars['lang'] =$this->lang; //send var to view
    
   }
 
