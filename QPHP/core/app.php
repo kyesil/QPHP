@@ -14,10 +14,9 @@ class Q_APP
 {
    function __construct()
    {
-      include APP_PATH . '/config.php';
-
+      require  APP_PATH . '/config.php';
       define("C_PATH", APP_PATH . '/controllers/');
-      define("L_PATH", APP_PATH . '/library/');
+      define("L_PATH", QPHP_PATH . '/library/');
       define("V_PATH", APP_PATH . '/views/');
       define("M_PATH", APP_PATH . '/models/');
       set_include_path(L_PATH . PATH_SEPARATOR . M_PATH); // auto loadt libs & modals
@@ -26,7 +25,7 @@ class Q_APP
       define("URI", $_SERVER['REQUEST_URI']);
       define("URI_PATH", parse_url(URI, PHP_URL_PATH));
 
-      require_once APP_PATH . '/core/controller.php';
+      require_once QPHP_PATH . '/core/controller.php';
    }
 
    function start()

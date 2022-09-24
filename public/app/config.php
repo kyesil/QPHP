@@ -15,6 +15,7 @@ define('DB_PORT', '3306');
 
 define('DEV_MODE', '1'); 
 
+//todo :  this file and hole app folder should be not required
 
 
 ini_set('display_errors', DEV_MODE);

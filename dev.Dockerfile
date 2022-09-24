@@ -11,6 +11,6 @@ RUN apt install -y php php-mysql php-apcu
 RUN apt autoremove && apt autoclean && apt clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
-CMD ["php", "-S", "0.0.0.0:8802","-t", "./" ]
+CMD ["php", "-S", "0.0.0.0:8802","-t", "./public" ]
 #or
 # CMD ["php", "-S", "0.0.0.0:8802","./router.php" ]

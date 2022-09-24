@@ -19,7 +19,7 @@ QUICK PHP 7+ MVC based router for create api. Works with :
 PHP 7+ required. 
 
 # Usage with PHP Built-in Server 
-- php -S localhost:8081 -t ./
+- php -S localhost:8081 -t ./public
 - or work with our router for custom redirects look router.php :
 - php -S localhost:8081 router.php
 

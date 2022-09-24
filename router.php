@@ -2,7 +2,10 @@
 //this router run like apache. it can route alias to another folder.
 
 $urls = parse_url($_SERVER['REQUEST_URI']);
-DEFINE('R_PATH',  $urls['path']);
+DEFINE('REQPATH',  $urls['path']);
+
+
+DEFINE('DOCROOT',  is_dir(__DIR__.'/public/') ? __DIR__.'/public/':__DIR__);
 DEFINE('INDEX_LIST', ['index.html', 'index.php']);
 DEFINE('MVC_INDEX', 'index.php'); //other request which is not found a file will load this file
 DEFINE('ALIAS_LIST', [
@@ -10,11 +13,13 @@ DEFINE('ALIAS_LIST', [
 ]);
 
 
-$RPATH = '.' . R_PATH;
+$_SERVER['DOCUMENT_ROOT']=DOCROOT;
+$RPATH = DOCROOT . REQPATH;
 foreach (ALIAS_LIST as $a => $r) {
     $ac = strlen($a);
-    if (str_starts_with(R_PATH, $a)) {
-        $RPATH  = $r . substr(R_PATH,$ac);
+    if (str_starts_with(REQPATH, $a)) {
+        $RPATH  = $r . substr(REQPATH,$ac);
+        $_SERVER['DOCUMENT_ROOT']=$r;
         break;
     }
 }
@@ -31,7 +36,7 @@ function route($path)
         if ($path != '' && !str_ends_with($path, '/'))
             $path .= '/';
         index($path);
-    } else require(MVC_INDEX);
+    } else require(DOCROOT.MVC_INDEX);
 
     exit();
 }
