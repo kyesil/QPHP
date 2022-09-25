@@ -66,7 +66,7 @@ abstract class Q_Controller
 
    public function apiEnable()
    {
-      $this->apiMode=true;
+      $this->apiMode = true;
       $this->autoRender = false; // disable view render for api
       header("Access-Control-Allow-Origin: *");
       header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
@@ -76,17 +76,6 @@ abstract class Q_Controller
    }
    public function err($msg, $code = 404)
    {
-      http_response_code($code);
-      $errorView = V_PATH . 'error/error.phtml';
-      if (file_exists($errorView) && !$this->apiMode) {
-         extract([
-            'errCode' => $code,
-            'errMsg' => $msg
-         ]);
-         require($errorView);
-         exit();
-      } else {
-         exit('<pre>' . $msg . '</pre> ');
-      }
+      Q_APP::error($code, $msg, $this->apiMode);
    }
 }

@@ -1,9 +1,9 @@
 <?php
 
 
-define('PATH', $_SERVER['DOCUMENT_ROOT']);
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']); // your public folder.
 define('QPHP_PATH', __DIR__);
-define('APP_PATH', PATH . '/app');
+define('APP_PATH', ROOT_PATH . '/app');
 
 require QPHP_PATH.'/core/app.php';
 

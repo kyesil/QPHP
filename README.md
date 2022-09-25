@@ -17,6 +17,14 @@ QUICK PHP 7+ MVC based router for create api. Works with :
 
 # Install
 PHP 7+ required. 
+- Your site files should be /public folder.
+- /public folder an example for quick start.
+- Apache, nginx or built-in server  should be pointed /public folder. you can change /public folder name depends your hosting.
+- Every php  request start from /public/index.php file.
+- QPHP folder contain MVC engine and libaries. it can be moved public folder.  look /public/index.php
+- /langs folder contain multi language files. it runs from /public/app/controllers/_main.php
+- /public/app/controllers/_main.php means: run before every request to controllers and action
+- supporst custom routes look  /public/app/qroutes.php
 
 # Usage with PHP Built-in Server 
 - php -S localhost:8081 -t ./public
@@ -26,13 +34,15 @@ PHP 7+ required.
 # Usage with Nginx 
 - for ngnix: put your server{} tag inside :
 ```
+root ....../public
 location / {
     try_files $uri $uri/ /index.php?$query_string;
 }
 ```
 # Usage with Apache 
+- config file point: DocumentRoot "...../public"
 - activate RewriteEngine
-- apache ready (look .htaccess file)
+- apache ready (look public/.htaccess file)
 
 # Usage with Docker 
 - Look dev.Dockerfile and  docker-compose.yml
