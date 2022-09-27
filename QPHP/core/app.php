@@ -44,8 +44,8 @@ class Q_APP
       } else $url = URI_PATH;
 
       $pathlang = null;
-      if (LANG_PATH) {
-         $pathlang = substr($url, 1, 2);
+      if (LANG_FROM_PATH) {
+         $pathlang = escapeshellcmd(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
       }
       $paths = explode('/', strtolower($url));
