@@ -4,7 +4,7 @@ define('DEFAULT_CONT', ''); // default controller preselect for  controller. for
 define('AUTO_RENDER_VIEW', true); // auto render phtml  file in  views folder which matc controller/action.phtml
 define('INDEX_PATH', 'home'); // if missing controller or action in url  it select home/home action and view
 
-define('LANG_FROM_PATH', false); //  if path like : /en/home/page2 > it's ignore first path 2 chars (/en/) 
+define('LANG_FROM_URL', false); //  if path like : /en/home/page2 > it's ignore first path 2 chars (/en/) 
 define('LANG_FOLDER',ROOT_PATH. '/langs/');
 
 define('DB_HOST', '127.0.0.1');

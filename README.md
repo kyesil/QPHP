@@ -1,10 +1,6 @@
-# QPHP MVC Based Api Router
-QUICK PHP 7+ MVC based router for create api. Works with :
-- Docker
-- PHP Built-in Server 
-- Nginx
-- Apache2
- # Specs
+# QPHP Simple MVC Engine
+
+ ## Specs
 - Create a service api controller. looks like standard MVC 
 - Simplified PDO helper. example in app\controllers\Svc.php
 - Support base URL/PATH like www.example.com/en/home/home or  www.example.com/mydir/home/home. look here: `app/qconfig.php`
@@ -16,11 +12,17 @@ QUICK PHP 7+ MVC based router for create api. Works with :
 - Multi language support from json file. look config.php file. For set and start language: look `controllers/_main.php`  file 
 
 # Install
+Works with :
+- Docker
+- PHP Built-in Server 
+- Nginx
+- Apache2
+
 PHP 7+ required. 
 - Your site files should be `/public` folder.
 - `/public` folder an example for quick start.
 - Apache, nginx or built-in server should be pointed `/public` folder. you can change `/public` folder name depends your hosting.
-- Every php  request start from `/public/index.php` file.
+- Every php request start from `/public/index.php` file.
 - QPHP folder contain MVC engine and libaries. it can be moved public folder.  look `/public/index.php`
 - `/langs` folder contain multi language files. it runs from `/public/app/controllers/_main.php`
 - `/public/app/controllers/_main.php` means: run before every request to controllers and action
@@ -61,7 +63,10 @@ location / {
 - Then your language var loaded from `/langs/en.json` 
 - Then you can use like  `<h3><?=LH::t('sweet_home')?></h3>` from your view or controller; 
 - If you need change language call this command  like `LH::langCheck('tr');`
-- It can be auto detect your PHP APCU extension and cache your language vars. If you dont have APCU load your lang file with every page loaded. 
+- It can be auto detect your PHP APCU extension and cache your language vars. If you dont have APCU, your lang file  load with every page loaded. 
 - For `LH::t('sweet_home')` command, if dont match any key which is your lang file, it return back the key. You se `"sweet_home"`.
 - If you need work with url for multi language like `/en/home/page2` , You need activate `LANG_FROM_PATH` in your `qconfig.php` file. Then QPHP ignore first 2 char from your request url. then send the lang code as parameter to your controller. Then you should activate in your main controller like `LH::langCheck($cont->lang);` look omur example here: `/public/app/controllers/_main.php`
 - For detect the missing key you can activate missingKey module. It can detect missing key and log file look: /langs/
+# Benchmark only apache nginx
+-  npm i -g autocannon
+- autocannon -c 100 -d 10 -p 10  http://localhost/svc/home

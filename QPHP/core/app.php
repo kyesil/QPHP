@@ -43,9 +43,9 @@ class Q_APP
          $url = substr(URI_PATH, strlen(BASE_URL)); //remove first char
       } else $url = URI_PATH;
 
-      $pathlang = null;
-      if (LANG_FROM_PATH) {
-         $pathlang = escapeshellcmd(substr($url, 1, 2));
+      $urllang = null;
+      if (LANG_FROM_URL) {
+         $urllang = escapeshellcmd(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
       }
       $paths = explode('/', strtolower($url));
@@ -53,9 +53,9 @@ class Q_APP
       $action = INDEX_PATH;
 
 
-      $rr = $this->checkRoute($url);
-      if ($rr&& count($rr) >= 2) 
-      list($cont, $action) = $rr;
+      $routeResult = $this->checkRoute($url);
+      if ($routeResult && count($routeResult) >= 2)
+         list($cont, $action) = $routeResult;
       elseif (DEFAULT_CONT != '') {
          $cont = DEFAULT_CONT;
          if (!empty($paths[1]))
@@ -69,9 +69,9 @@ class Q_APP
       $contClass = $cont . 'C';
       if (file_exists(C_PATH . $cont  . '.php')) {
          require(C_PATH . $cont . '.php');
-         return new $contClass($cont, $action, $contClass, $paths, $pathlang);
+         return new $contClass($cont, $action, $contClass, $paths, $urllang);
       } else
-         exit("404: controller file not found: " . C_PATH . $cont . '.php');
+         Q_APP::error(404, "404: controller file not found: " . C_PATH . $cont . '.php');
    }
 
    function checkRoute($url)
@@ -79,7 +79,8 @@ class Q_APP
       if (!defined("QROUTES"))  return null;
 
       foreach (QROUTES as $key => $value) {
-         if (str_starts_with($url, $key)) return $value;
+         if (str_starts_with($url, $key))  //todo regex 
+            return $value;
       }
       return null;
    }
@@ -87,7 +88,7 @@ class Q_APP
    {
       http_response_code($code);
       $errorView = V_PATH . 'error/error.phtml';
-      if (file_exists($errorView) && !$raw) {
+      if (!$raw && file_exists($errorView)) {
          extract([
             'errCode' => $code,
             'errMsg' => $msg
