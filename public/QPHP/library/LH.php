@@ -10,7 +10,7 @@ class LH
         if (isset(LH::$dict[$key]))
             return LH::$dict[$key];
         else {
-            LH::missingKey($key);
+            LH::missKey($key);
             return  $key;
         }
     }
@@ -25,17 +25,17 @@ class LH
 
     public static function langCheck($lid)
     {
-        LH::$lid = $lid;
+        LH::$lid = Q_APP::escapeDir($lid);
         if (!empty(LH::$dict)) return;  //dont touch next reload.
-        $langFile = LANG_FOLDER . escapeshellcmd($lid) . '.json';
+        $langFile = LANG_FOLDER . LH::$lid . '.json';
         $isFileExist = file_exists($langFile);
         if (!$isFileExist) return LH::$dict = [];
         if (!function_exists('apcu_store'))  //can cache ?
             return LH::langLoad($langFile);
 
-        $cachetime = LH::g('lang_' . $lid . '_time');
+        $cachetime = LH::g('lang_' . LH::$lid. '_time');
         if (time() - $cachetime <= LH::$cacheTimeout) {
-            LH::$dict =  LH::g('lang_' . $lid . '_data');
+            LH::$dict =  LH::g('lang_' . LH::$lid . '_data');
             if (LH::$dict && !empty(LH::$dict)) return;
         }
 
@@ -48,14 +48,12 @@ class LH
         }
     }
 
-    public static function missingKey($key)
+    public static function missKey($key)
     {
         if (!DEV_MODE)
             return;
-        if (file_exists(LANG_FOLDER . 'missingKey.php')) {
-            include LANG_FOLDER . 'missingKey.php';
-            missingKey($key);
-        }
+        // $line = time() . '|'.$key . '|' . $_SERVER['REQUEST_URI'] . "\n";
+        // file_put_contents(LANG_FOLDER . LH::$lid . '_.bak', $line,FILE_APPEND);
     }
 
     public static function langList()

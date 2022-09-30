@@ -18,18 +18,18 @@ class Q_APP
       if (is_file($configPath)) require $configPath;
       else throw new Exception("qphp config file not found in : $configPath. You can find one here : https://github.com/kyesil/QPHP/tree/master/public/app/");
 
-      $routePath = APP_PATH . '/qroutes.php';
-      if (is_file($routePath)) include $routePath;
+      $routesPath = APP_PATH . '/qroutes.php';
+      if (is_file($routesPath)) include $routesPath;
 
       define("C_PATH", APP_PATH . '/controllers/');
-      define("L_PATH", QPHP_PATH . '/library/');
+      define("QL_PATH", QPHP_PATH . '/library/');
+      define("L_PATH", APP_PATH . '/library/');
       define("V_PATH", APP_PATH . '/views/');
       define("M_PATH", APP_PATH . '/models/');
-      $autoIncludes = L_PATH;
-      if (is_dir(M_PATH))
-         $autoIncludes .= PATH_SEPARATOR . M_PATH;
-      set_include_path($autoIncludes);
-      spl_autoload_register();
+
+      Q_APP::importDir(QL_PATH);
+      Q_APP::importDir(L_PATH);
+      Q_APP::importDir(M_PATH);
 
       define("URI", $_SERVER['REQUEST_URI']);
       define("URI_PATH", parse_url(URI, PHP_URL_PATH));
@@ -45,7 +45,7 @@ class Q_APP
 
       $urllang = null;
       if (LANG_FROM_URL) {
-         $urllang = escapeshellcmd(substr($url, 1, 2));
+         $urllang =Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
       }
       $paths = explode('/', strtolower($url));
@@ -76,14 +76,40 @@ class Q_APP
 
    function checkRoute($url)
    {
-      if (!defined("QROUTES"))  return null;
+      if (!defined("ROUTE_LIST"))  return null;
 
-      foreach (QROUTES as $key => $value) {
-         if (str_starts_with($url, $key))  //todo regex 
+      foreach (ROUTE_LIST as $key => $value) {
+         if (strpos($url, $key) !== false)
             return $value;
       }
       return null;
    }
+   static function importDir($dir) // set_include_path not working on hosting
+   {
+      if (!is_dir($dir)) return false;
+      $files = glob($dir . '*.php');
+      foreach ($files as $key => $value) {
+         include  $value;
+      }
+
+      // $getincPath = get_include_path();
+      // $autoIncludes = L_PATH;
+      // if (is_dir($getincPath))
+      //    $autoIncludes .=  PATH_SEPARATOR . $getincPath;
+      // if (is_dir(M_PATH))
+      //    $autoIncludes .= PATH_SEPARATOR . M_PATH;
+      // set_include_path($autoIncludes);
+      // spl_autoload_register();
+
+   }
+   public static function escapeDir($str) 
+   {
+      if(function_exists("escapeshellarg"))//some hosting(natro)  does not have escapeshellcmd method. so it's 
+      return escapeshellarg($str);
+      else return $str;
+
+   }
+
    public static  function error($code, $msg, $raw = false)
    {
       http_response_code($code);
