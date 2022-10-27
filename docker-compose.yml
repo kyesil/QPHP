@@ -3,8 +3,9 @@ services:
   qphp:
     build:
       context: ./
-      dockerfile: dev.Dockerfile
+      dockerfile: alpine.Dockerfile
     container_name: qphp
+    hostname: dockerqphp
     ports:
       - '8802:8802'
     volumes:

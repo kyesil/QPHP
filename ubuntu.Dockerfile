@@ -2,7 +2,6 @@ FROM ubuntu:latest
 
 RUN mkdir /app
 ENV DEBIAN_FRONTEND noninteractive
-ENV DOCKER_HOSTNAME dockerqphp
 
 RUN export DEBIAN_FRONTEND=noninteractive
 RUN apt update -y
