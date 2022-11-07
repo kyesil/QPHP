@@ -50,7 +50,7 @@ class LH
 
     public static function missKey($key)
     {
-        if (!DEV_MODE)
+        if (!defined('DEV_MODE'))
             return;
         // $line = time() . '|'.$key . '|' . $_SERVER['REQUEST_URI'] . "\n";
         // file_put_contents(LANG_FOLDER . LH::$lid . '_.bak', $line,FILE_APPEND);

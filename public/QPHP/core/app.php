@@ -45,28 +45,34 @@ class Q_APP
 
       $urllang = null;
       if (LANG_FROM_URL) {
-         $urllang =Q_APP::escapeDir(substr($url, 1, 2));
+         $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
       }
-      $paths = explode('/', strtolower($url));
+      $paths = explode('/', ($url));
       $cont = INDEX_PATH;
       $action = INDEX_PATH;
-
 
       $routeResult = $this->checkRoute($url);
       if ($routeResult && count($routeResult) >= 2)
          list($cont, $action) = $routeResult;
-      elseif (DEFAULT_CONT != '') {
+      elseif (!empty(DEFAULT_CONT)) {
          $cont = DEFAULT_CONT;
          if (!empty($paths[1]))
             $action = $paths[1];
       } else {
+
+         if (!empty($paths[3]) && is_dir(C_PATH . $paths[1])) { // sub controller
+            $paths[1] = $paths[1] . "/" . $paths[2];
+            $paths[2] = $paths[3];
+         }
+
          if (!empty($paths[1]))
             $cont = $paths[1];
          if (!empty($paths[2]))
             $action = $paths[2];
       }
-      $contClass = $cont . 'C';
+
+      $contClass = str_replace("/","_",$cont) . 'C';
       if (file_exists(C_PATH . $cont  . '.php')) {
          require(C_PATH . $cont . '.php');
          return new $contClass($cont, $action, $contClass, $paths, $urllang);
@@ -102,12 +108,11 @@ class Q_APP
       // spl_autoload_register();
 
    }
-   public static function escapeDir($str) 
+   public static function escapeDir($str)
    {
-      if(function_exists("escapeshellarg"))//some hosting(natro)  does not have escapeshellcmd method. so it's 
-      return escapeshellarg($str);
+      if (function_exists("escapeshellarg")) //some hosting(natro)  does not have escapeshellcmd method. so it's 
+         return escapeshellarg($str);
       else return $str;
-
    }
 
    public static  function error($code, $msg, $raw = false)
