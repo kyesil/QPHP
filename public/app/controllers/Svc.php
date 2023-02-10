@@ -3,48 +3,43 @@ class SvcC extends Q_Controller
 {
   function _init()
   {
-     $this->apiEnable();
+    $this->apiEnable();
   }
   public function __destruct()
   {
   }
   public function get()
   {
+    //method 1
     $db = dbC::getDB();
-   
+    $data = $db->all("SELECT * FROM testtable WHERE id=:id ;", ["id" => "12"]);
 
-    $data = $db->gets("SELECT * FROM testtable WHERE id=:id ;", ["id" => "12"]);
-    $user= new UserM("ali","ali@local");
+    //or  method 2
+    $data = QQ()->t("testtable")->s("*")->w("id=:id")->all(["id" => "12"]);
+    $user = new UserM("ali", "ali@local");
 
     phpH::json($data);
   }
 
   public function set()
   {
-    $q=["id"=>"12","name" => "roon&ey ","title"=>"hell'o"]; // $q=$_POST;
     $db = dbC::getDB();
 
-    //method 2 secure way
-    $fields=dbC::getSetFields($q); //fields="id=:id,name =:name,title=:title"
-    $data = $db->set("INSERT INTO testtable SET $fields ON DUPLICATE KEY UPDATE $fields ;",$q);  //insert or update one line
+    //method 1
+    $q = ["id" => "12", "name" => "roon&ey ", "title" => "hell'o"];
+    $fields = dbC::getSetFields($q); //fields="id=:id,name =:name,title=:title"
+    $data = $db->set("INSERT INTO testtable SET $fields ON DUPLICATE KEY UPDATE $fields ;", $q);  //insert or update one line
 
-    // //method 1 
-    // $fields=dbC::getValueFields($q);  //fields="id='12',name ='rooney ',title='hello'"
-   
-    // $data = $db->set("INSERT INTO testtable SET $fields ON DUPLICATE KEY UPDATE $fields;");
-
-    //method 3
-    // $fields=dbC::getInsertFields($q); //fields="(id,name,title) VALUES (:id,:name,:title)"
-    // $data = $db->set("INSERT INTO testtable $fields;",$q);
+    //or  method 2
+    $q = ["id" => "12", "name" => "roon&ey ", "title" => "hell'o"];
+    QQ()->t('testtable')->ins($q, dubUpdate: true);
 
     phpH::json($data);
   }
+
   public function home()
   {
-
-    $user= new UserM("ali","ali@local");
-
+    $user = new UserM("ali", "ali@local");
     phpH::json($user);
   }
-
 }

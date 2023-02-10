@@ -16,7 +16,7 @@ class Q_APP
    {
       $configPath = APP_PATH . '/qconfig.php';
       if (is_file($configPath)) require $configPath;
-      else throw new Exception("qphp config file not found in : $configPath. You can find one here : https://github.com/kyesil/QPHP/tree/master/public/app/");
+      else throw new Exception("qphp config file not found in : $configPath.");
 
       $routesPath = APP_PATH . '/qroutes.php';
       if (is_file($routesPath)) include $routesPath;
@@ -110,7 +110,7 @@ class Q_APP
    }
    public static function escapeDir($str)
    {
-      if (function_exists("escapeshellarg")) //some hosting(natro)  does not have escapeshellcmd method. so it's 
+      if (function_exists("escapeshellarg")) //some hosting(natro)  does not have escapeshellcmd method. so it's
          return escapeshellarg($str);
       else return $str;
    }

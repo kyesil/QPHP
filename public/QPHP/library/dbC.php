@@ -7,6 +7,7 @@ class dbC
   public $dbname;
   public static dbC $current;
   public static  $currentDB;
+
   public function __construct($dbname = DB_DB, $host = DB_HOST, $user = DB_USER, $pass = DB_PASS)
   {
     try {
@@ -23,6 +24,7 @@ class dbC
     }
     return $this->pdo;
   }
+
   public static function getDB($dbname = DB_DB)
   {
     if (!isset(dbC::$current->pdo) ||  dbC::$currentDB != $dbname) {
@@ -47,8 +49,6 @@ class dbC
 
   public function exec($sql, $params)
   {
-
-
     $matches = null;
     preg_match_all("/(\:[A-z]\w+)(?![^\{]*\})(?![^\[]*\])/", $sql, $matches);
     //preg_match_all("/(\:[A-z]\w+)(?=([^'\\]*(\\.|'([^'\\]*\\.)*[^'\\]*'))*[^']*$)/", $sql, $matches);
@@ -70,27 +70,9 @@ class dbC
     }
 
     $r = $this->stm->execute();
-    //$r = $this->stm->execute();
+    return $r;
+  }
 
-    return $r;
-  }
-  public function exec_old($sql, $params)
-  {
-    $this->stm = $this->pdo->prepare($sql);
-    if (is_array($params)) {
-      $pass = [];
-      foreach ($params as $k => $v) {
-        if (strpos($sql, ':' . $k) === false) {
-          continue;
-        }
-        $pass[$k] = $v;
-        $this->stm->bindParam(':' . $k, $v);
-      }
-    }
-    // var_dump($pass);
-    $r = $this->stm->execute($pass);
-    return $r;
-  }
   public function set($sql, $params = null)
   {
     try {
@@ -103,7 +85,8 @@ class dbC
     }
     return $r;
   }
-  public function gets($sql, $params = null)
+
+  public function all($sql, $params = null)
   {
     try {
       $this->exec($sql, $params);
@@ -114,7 +97,8 @@ class dbC
     }
     return $r;
   }
-  public function get($sql, $params = null)
+
+  public function one($sql, $params = null)
   {
     try {
 
@@ -125,6 +109,7 @@ class dbC
     }
     return $r;
   }
+
   public function getDict($sql, $pkey, $pval, $params = null)
   {
     $r = [];
@@ -137,10 +122,12 @@ class dbC
     }
     return $r;
   }
+
   public function getError($e)
   {
     return ['err' => $e->getCode(), 'msg' => $e->getMessage()];
   }
+
   public function getGroup($sql, $pkey, $pval, $params = null)
   {
     $r = [];
@@ -154,13 +141,11 @@ class dbC
     return $r;
   }
 
-
   /** escape string */
-  public static function escapeFields($value)
+  public static function escapeField($value)
   {
     return preg_replace('/[^A-Za-z0-9_\{\}\[\]\:]/', '', $value);
   }
-
 
   /** return escaped params for pdo like this : "field1=:field1,field2=:field2"  */
   public static function getSetFields($q)
@@ -169,28 +154,70 @@ class dbC
     if (is_array($q))
       foreach ($q as $k => $v) {
         if ($k[0] == '_') continue;
-        $k = dbC::escapeFields($k);
-        $fields .= " $k= :$k,";
+        $k = dbC::escapeField($k);
+        $fields .= " $k=:$k,";
       }
     $fields = rtrim($fields, ',');
     return $fields;
   }
 
   /** return escaped params for pdo like this : "(field1,field2,field2) VALUES (:field1,:field2,:field2)"  */
-  // public static function getInsertFields($q)
+  public static function getInsertFields($q)
+  {
+    $fields = '';
+    $values = '';
+    if (is_array($q))
+      foreach ($q as $k => $v) {
+        if ($k[0] == '_') continue;
+        $k = dbC::escapeField($k);
+        $fields .= "$k,";
+        $values .= ":$k,";
+      }
+    $fields = rtrim($fields, ',');
+    $values = rtrim($values, ',');
+    return '(' . $fields . ') VALUES (' . $values . ')';
+  }
+
+
+  // public function Qdel($table, $params, $where, $joinSql = "", $limit = "", $getSql = false)
   // {
-  //   $fields = '';
-  //   $values = '';
-  //   if (is_array($q))
-  //     foreach ($q as $k => $v) {
-  //       if ($k[0] == '_') continue;
-  //       $k = dbC::escapeFields($k);
-  //       $fields .= "$k,";
-  //       $values .= ":$k,";
-  //     }
-  //   $fields = rtrim($fields, ',');
-  //   $values = rtrim($values, ',');
-  //   return '(' . $fields . ') VALUES (' . $values . ')';
+  //   $sql = "DELETE t0.* FROM $table t0 $joinSql  $where $limit;";
+  //   return  $getSql ? $sql : $this->set($sql, $params);
+  // }
+  // public function ins($table, $params, $dubUpdate = null, $getSql = false)
+  // {
+  //   $setFields = dbC::getSetFields($params);
+  //   if ($dubUpdate === true) $dubUpdate = " ON DUPLICATE KEY UPDATE  $setFields ";
+  //   elseif (strlen($dubUpdate) > 3) $dubUpdate = "ON DUPLICATE KEY UPDATE $dubUpdate ";
+  //   else  $dubUpdate = "";
+  //   $sql = "INSERT INTO  $table  SET $setFields $dubUpdate;";
+
+  //   return  $getSql ? $sql : $this->set($sql, $params);
+  // }
+
+  // public function Qupd($table, $params, $where, $joinSql = "", $limit = "", $getSql = false)
+  // {
+  //   $setFields = dbC::getSetFields($params);
+  //   $sql = "UPDATE $table SET $setFields  $joinSql  $where $limit;";
+  //   return  $getSql ? $sql : $this->set($sql, $params);
+  // }
+
+  // public function Qgets($table, $params, $where, $select = "*", $joinSql = "", $group = "", $limit = "", $order = "", $getSql = false)
+  // {
+  //   $sql = "SELECT $select FROM $table $joinSql  $where  $group $order  $limit;";
+  //   return  $getSql ? $sql : $this->all($sql, $params);
+  // }
+  // public function Qget($params, $table, $where="", $select = "*", $joinSql = "", $group = "", $limit = "", $order = "", $getSql = false)
+  // {
+  //   if (!empty($limit)) $limit = "LIMIT 1";
+  //   $sql = "SELECT $select FROM $table $joinSql $where $group $order  $limit;";
+  //   return  $getSql ? $sql : $this->one($sql, $params);
+  // }
+  // public function QgetCell($params, $table, $where="", $select = "*", $joinSql = "", $group = "", $limit = "", $order = "", $getSql = false,$index = 0)
+  // {
+  //   $val = $this->Qget($params, $table, $where, $select, $joinSql, $group , $limit, $order, $getSql = false);
+  //   if (is_array($val))
+  //     return $val[$index] ?? array_values($val)[$index] ?? false;
   // }
 
   // public static function escapeValues($value)

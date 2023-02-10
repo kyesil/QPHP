@@ -68,6 +68,9 @@ location / {
 - For `LH::t('sweet_home')` command, if dont match any key which is your lang file, it return back the key. You se `"sweet_home"`.
 - If you need work with url for multi language like `/en/home/page2` , You need activate `LANG_FROM_URL` in your `qconfig.php` file. Then QPHP ignore first 2 char from your request url. then send the lang code as parameter to your controller. Then you should activate in your main controller like `LH::langCheck($cont->lang);` look omur example here: `/public/app/controllers/_main.php`
 - For detect the missing key you can activate missingKey module. It can detect missing key and log file look: /langs/
+
+# DB library 
+- examples here `/public/app/controllers/svc.php`
 # Benchmark only apache nginx
 -  npm i -g autocannon
 - autocannon -c 100 -d 10 -p 10  http://localhost/svc/home
