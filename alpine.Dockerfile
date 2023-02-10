@@ -2,7 +2,8 @@ FROM alpine:edge
 
 RUN mkdir /app
 
-RUN apk add --no-cache supervisor php81 php81-pecl-apcu php81-pdo_mysql
+RUN apk add --no-cache php82 php82-pecl-apcu php82-pdo_mysql
+RUN alias php=php82
 
 WORKDIR /app
 
