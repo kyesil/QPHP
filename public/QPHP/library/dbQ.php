@@ -1,7 +1,7 @@
 <?php
 function QQ($getSql = false, $dbname = DB_DB): dbQuery
 {
-  $dbq = new dbQuery($getSql, $dbname);
+  $dbq = new dbQuery( $dbname,$getSql);
   return $dbq;
 }
 
@@ -16,7 +16,7 @@ class dbQuery
   private string $group = "";
   private string $limit = "";
   public ?dbC $dbc = null;
-  public function __construct($getSql = false, $dbname)
+  public function __construct( $dbname,$getSql = false)
   {
     $this->dbc = dbC::getDB($dbname);
     $this->getSql = $getSql;
@@ -90,18 +90,18 @@ class dbQuery
     return  $this->getSql ? $sql : $this->dbc->set($sql, $params);
   }
 
-  public function all($params)
+  public function all($params=[])
   {
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where  $this->group $this->order  $this->limit;";
     return  $this->getSql ? $sql : $this->dbc->all($sql, $params);
   }
-  public function one($params)
+  public function one($params=[])
   {
     if (!isset($this->limit)) $this->limit = "LIMIT 1";
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where $this->group $this->order  $this->limit;";
     return  $this->getSql ? $sql : $this->dbc->one($sql, $params);
   }
-  public function getCell($params, $index = 0)
+  public function getCell($params=[], $index = 0)
   {
     $val = $this->one($params);
     if (is_array($val))
