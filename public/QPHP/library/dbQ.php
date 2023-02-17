@@ -1,25 +1,24 @@
 <?php
-function QQ($getSql = false, $dbname = DB_DB): dbQuery
+function QQ($dbname = DB_DB): dbQuery
 {
-  $dbq = new dbQuery( $dbname,$getSql);
+  $dbq = new dbQuery($dbname);
   return $dbq;
 }
 
 class dbQuery
 {
-  private string $getSql;
   private string $table;
   private string $joinSql = "";
   private string $select = "*";
   private string $where = "";
   private string $order = "";
   private string $group = "";
-  private string $limit = "";
+  private string $limit = "LIMIT 1000"; //default
   public ?dbC $dbc = null;
-  public function __construct( $dbname,$getSql = false)
+  public function __construct($dbname)
   {
     $this->dbc = dbC::getDB($dbname);
-    $this->getSql = $getSql;
+
     if ($this->dbc) return $this;
     else   return null;
   }
@@ -68,10 +67,10 @@ class dbQuery
   }
 
 
-  public function del($params)
+  public function del($params=null,$getSql=false)
   {
     $sql = "DELETE t0.* FROM $this->table t0 $this->joinSql  $this->where $this->limit;";
-    return  $this->getSql ? $sql : $this->dbc->set($sql, $params);
+    return  $getSql ? $sql : $this->dbc->set($sql, $params);
   }
   public function ins($params, $dubUpdate = null)
   {
@@ -83,27 +82,27 @@ class dbQuery
     //return  $sql;
     return  $this->dbc->set($sql, $params);
   }
-  public function upd($params)
+  public function upd($params,$getSql=false)
   {
     $setFields = dbC::getSetFields($params);
     $sql = "UPDATE $this->table SET $setFields  $this->joinSql  $this->where $this->limit;";
-    return  $this->getSql ? $sql : $this->dbc->set($sql, $params);
+    return  $getSql ? $sql : $this->dbc->set($sql, $params);
   }
 
-  public function all($params=[])
+  public function all($params=null,$getSql=false)
   {
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where  $this->group $this->order  $this->limit;";
-    return  $this->getSql ? $sql : $this->dbc->all($sql, $params);
+    return  $getSql ? $sql : $this->dbc->all($sql, $params);
   }
-  public function one($params=[])
+  public function one($params,$getSql=false)
   {
     if (!isset($this->limit)) $this->limit = "LIMIT 1";
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where $this->group $this->order  $this->limit;";
-    return  $this->getSql ? $sql : $this->dbc->one($sql, $params);
+    return  $getSql ? $sql : $this->dbc->one($sql, $params);
   }
-  public function getCell($params=[], $index = 0)
+  public function getCell($params, $index = 0,$getSql=false)
   {
-    $val = $this->one($params);
+    $val = $this->one($params,$getSql);
     if (is_array($val))
       return $val[$index] ?? array_values($val)[$index] ?? false;
   }
