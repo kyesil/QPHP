@@ -66,10 +66,13 @@ class dbQuery
     return $this;
   }
 
-
-  public function del($params=null,$getSql=false)
+  public function del($params, $getSql = false)
   {
-    $sql = "DELETE t0.* FROM $this->table t0 $this->joinSql  $this->where $this->limit;";
+    $dt = "";
+    if (!empty($this->joinSql))
+      $dt = "$this->table";
+    $sql = "DELETE $dt FROM $this->table $this->joinSql  $this->where $this->limit;";
+
     return  $getSql ? $sql : $this->dbc->set($sql, $params);
   }
   public function ins($params, $dubUpdate = null)
@@ -82,27 +85,27 @@ class dbQuery
     //return  $sql;
     return  $this->dbc->set($sql, $params);
   }
-  public function upd($params,$getSql=false)
+  public function upd($params, $getSql = false)
   {
     $setFields = dbC::getSetFields($params);
     $sql = "UPDATE $this->table SET $setFields  $this->joinSql  $this->where $this->limit;";
     return  $getSql ? $sql : $this->dbc->set($sql, $params);
   }
 
-  public function all($params=null,$getSql=false)
+  public function all($params = null, $getSql = false)
   {
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where  $this->group $this->order  $this->limit;";
     return  $getSql ? $sql : $this->dbc->all($sql, $params);
   }
-  public function one($params,$getSql=false)
+  public function one($params, $getSql = false)
   {
     if (!isset($this->limit)) $this->limit = "LIMIT 1";
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where $this->group $this->order  $this->limit;";
     return  $getSql ? $sql : $this->dbc->one($sql, $params);
   }
-  public function getCell($params, $index = 0,$getSql=false)
+  public function cell($params, $index = 0, $getSql = false)
   {
-    $val = $this->one($params,$getSql);
+    $val = $this->one($params, $getSql);
     if (is_array($val))
       return $val[$index] ?? array_values($val)[$index] ?? false;
   }

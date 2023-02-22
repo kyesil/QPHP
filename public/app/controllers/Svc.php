@@ -3,22 +3,27 @@ class SvcC extends Q_Controller
 {
   function _init()
   {
-    $this->apiEnable();
+    $this->apiEnable(); //enable json api & disable autorender
   }
   public function __destruct()
   {
   }
   public function get()
   {
-    //method 1
+    // get array object method 1
     $db = dbC::getDB();
-    $data = $db->all("SELECT * FROM testtable WHERE id=:id ;", ["id" => "12"]);
+    $data = $db->all("SELECT * FROM testtable WHERE categoryID=:categoryID ;", ["categoryID" => "12"]);
 
-    //or  method 2
-    $data = QQ()->t("testtable")->s("*")->w("id=:id")->all(["id" => "12"]);
-    $user = new UserM("ali", "ali@local");
+    //or  get array object method 2
+    $data = QQ()->t("testtable")->s("*")->w("categoryID=:categoryID")->all(["categoryID" => "12"]);
 
-    phpH::json($data);
+    //get one
+    $one = QQ()->t("testtable")->s("*")->w("id=:id")->one(["id" => "12"]);
+
+    //get cell
+    $count = QQ()->t("testtable")->s("COUNT(*)")->w("categoryID=:categoryID")->cell(["categoryID" => "12"]);
+
+    phpH::json($data); //echo json encoded data
   }
 
   public function set()
