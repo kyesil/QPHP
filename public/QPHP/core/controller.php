@@ -54,11 +54,7 @@ abstract class Q_Controller
    public function renderview($view = null, $vars = null)
    {
       $this->view = $view . '.phtml';
-
-      if ($vars)
-         $this->viewVars = $vars;
-
-      if (!file_exists(V_PATH . $this->view))  return $this->err("404: view not found: " . $this->view, 404);
+      if (!file_exists(V_PATH . $this->view))  return $this->err("404: view not found: " .V_PATH . $this->view, 404);
       if (is_array($this->viewVars))
          extract($this->viewVars);
       require(V_PATH  . $this->view);

@@ -24,7 +24,6 @@ class Q_APP
       define("C_PATH", APP_PATH . '/controllers/');
       define("QL_PATH", QPHP_PATH . '/library/');
       define("L_PATH", APP_PATH . '/library/');
-      define("V_PATH", APP_PATH . '/views/');
       define("M_PATH", APP_PATH . '/models/');
 
       Q_APP::importDir(QL_PATH);
@@ -39,15 +38,27 @@ class Q_APP
 
    function start()
    {
+  
       if (!empty(BASE_URL)) {
          $url = substr(URI_PATH, strlen(BASE_URL)); //remove first char
       } else $url = URI_PATH;
 
       $urllang = null;
-      if (LANG_FROM_URL) {
+      $viewpath=APP_PATH . "/views/";
+      if (LANG_MODE) {
          $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
-      }
+         if (LANG_MODE == 'view') {
+            if (!strlen($urllang) > 0) {
+               header('Location: ./'.LANG_DEFAULT.'/');
+               // $urllang='en';
+               exit('301');
+            }
+           $viewpath=APP_PATH . "/views/$urllang/";
+         } 
+            
+      } 
+      define("V_PATH", $viewpath);
       $paths = explode('/', ($url));
       $cont = INDEX_PATH;
       $action = INDEX_PATH;
@@ -72,7 +83,7 @@ class Q_APP
             $action = $paths[2];
       }
 
-      $contClass = str_replace("/","_",$cont) . 'C';
+      $contClass = str_replace("/", "_", $cont) . 'C';
       if (file_exists(C_PATH . $cont  . '.php')) {
          require(C_PATH . $cont . '.php');
          return new $contClass($cont, $action, $contClass, $paths, $urllang);
@@ -111,8 +122,8 @@ class Q_APP
    public static function escapeDir($str)
    {
       if (function_exists("escapeshellarg")) //some hosting(natro)  does not have escapeshellcmd method. so it's
-         return escapeshellarg($str);
-      else return $str;
+         $str = escapeshellarg($str);
+      return str_replace("'", "", $str);
    }
 
    public static  function error($code, $msg, $raw = false)
