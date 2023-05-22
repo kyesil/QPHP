@@ -21,17 +21,17 @@ class Q_APP
       $routesPath = APP_PATH . '/qroutes.php';
       if (is_file($routesPath)) include $routesPath;
 
-      define("C_PATH", APP_PATH . '/controllers/');
-      define("QL_PATH", QPHP_PATH . '/library/');
-      define("L_PATH", APP_PATH . '/library/');
-      define("M_PATH", APP_PATH . '/models/');
+      define('C_PATH', APP_PATH . '/controllers/');
+      define('QL_PATH', QPHP_PATH . '/library/');
+      define('L_PATH', APP_PATH . '/library/');
+      define('M_PATH', APP_PATH . '/models/');
 
       Q_APP::importDir(QL_PATH);
       Q_APP::importDir(L_PATH);
       Q_APP::importDir(M_PATH);
 
-      define("URI", $_SERVER['REQUEST_URI']);
-      define("URI_PATH", parse_url(URI, PHP_URL_PATH));
+      define('URI', $_SERVER['REQUEST_URI']);
+      define('URI_PATH', parse_url(URI, PHP_URL_PATH));
 
       require_once QPHP_PATH . '/core/controller.php';
    }
@@ -44,7 +44,7 @@ class Q_APP
       } else $url = URI_PATH;
 
       $urllang = null;
-      $viewpath=APP_PATH . "/views/";
+      $viewpath=APP_PATH . '/views/';
       if (LANG_MODE) {
          $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
@@ -55,10 +55,11 @@ class Q_APP
                exit('301');
             }
            $viewpath=APP_PATH . "/views/$urllang/";
+           if(!is_dir($viewpath))$viewpath=APP_PATH . '/views/'.LANG_DEFAULT.'/';
          } 
             
       } 
-      define("V_PATH", $viewpath);
+      define('V_PATH', $viewpath);
       $paths = explode('/', ($url));
       $cont = INDEX_PATH;
       $action = INDEX_PATH;
@@ -83,17 +84,17 @@ class Q_APP
             $action = $paths[2];
       }
 
-      $contClass = str_replace("/", "_", $cont) . 'C';
+      $contClass = str_replace('/', '_', $cont) . 'C';
       if (file_exists(C_PATH . $cont  . '.php')) {
          require(C_PATH . $cont . '.php');
          return new $contClass($cont, $action, $contClass, $paths, $urllang);
       } else
-         Q_APP::error(404, "404: controller file not found: " . C_PATH . $cont . '.php');
+         Q_APP::error(404, '404: controller file not found: ' . C_PATH . $cont . '.php');
    }
 
    function checkRoute($url)
    {
-      if (!defined("ROUTE_LIST"))  return null;
+      if (!defined('ROUTE_LIST'))  return null;
 
       foreach (ROUTE_LIST as $key => $value) {
          if (strpos($url, $key) !== false)
@@ -121,7 +122,7 @@ class Q_APP
    }
    public static function escapeDir($str)
    {
-     return preg_replace("/[^a-zA-Z0-9]+/", "", $str);
+     return preg_replace("/[^a-zA-Z0-9]+/", '', $str);
    }
 
    public static  function error($code, $msg, $raw = false)
