@@ -121,9 +121,7 @@ class Q_APP
    }
    public static function escapeDir($str)
    {
-      if (function_exists("escapeshellarg")) //some hosting(natro)  does not have escapeshellcmd method. so it's
-         $str = escapeshellarg($str);
-      return str_replace("'", "", $str);
+     return preg_replace("/[^a-zA-Z0-9]+/", "", $str);
    }
 
    public static  function error($code, $msg, $raw = false)
