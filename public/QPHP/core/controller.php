@@ -12,6 +12,7 @@ abstract class Q_Controller
    public $paths;
    public $lang;
    public $apiMode = false;
+   
 
    function __construct($cont, $action, $class, $paths, $pathlang)
    {
@@ -20,7 +21,7 @@ abstract class Q_Controller
       $this->action = $action;
       $this->paths = $paths;
       $this->lang = $pathlang;
-
+     
       try {
          $this->router();
       } catch (\Throwable $th) {
@@ -53,10 +54,13 @@ abstract class Q_Controller
 
    public function renderview($view = null, $vars = null)
    {
+  
       $this->view = $view . '.phtml';
-      if (!file_exists(V_PATH . $this->view))  return $this->err("404: view not found: " .V_PATH . $this->view, 404);
+
       if (is_array($this->viewVars))
          extract($this->viewVars);
+         
+      if (!file_exists(V_PATH . $this->view))  return $this->err("404: view not found: " .V_PATH . $this->view, 404);
       require(V_PATH  . $this->view);
    }
 
@@ -72,6 +76,6 @@ abstract class Q_Controller
    }
    public function err($msg, $code = 404)
    {
-      Q_APP::error($code, $msg, $this->apiMode);
+      Q_APP::error($code, $msg,$this->viewVars, $this->apiMode);
    }
 }

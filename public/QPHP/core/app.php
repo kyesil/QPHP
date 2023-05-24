@@ -48,7 +48,7 @@ class Q_APP
       if (LANG_MODE) {
          $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
-         if (LANG_MODE == 'view') {
+         if (LANG_MODE === 'view') {
             if (!strlen($urllang) > 0) {
                header('Location: ./'.LANG_DEFAULT.'/');
                // $urllang='en';
@@ -125,9 +125,11 @@ class Q_APP
      return preg_replace("/[^a-zA-Z0-9]+/", '', $str);
    }
 
-   public static  function error($code, $msg, $raw = false)
+   public static  function error($code, $msg,$viewVars=null,$raw = false)
    {
       http_response_code($code);
+      if (is_array($viewVars))
+         extract($viewVars);
       $errorView = V_PATH . 'error/error.phtml';
       if (!$raw && file_exists($errorView)) {
          extract([
