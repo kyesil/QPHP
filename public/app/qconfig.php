@@ -2,12 +2,12 @@
 //this file and parameters can be  required don't  remove or comment variables
 
 define('BASE_URL', ''); // it just delete as many chars as BASE_URL length from the start. for example /blog:  path rendering igrore /blog path
-define('DEFAULT_CONT', 'home'); // default controller preselect for  controller. for example actions: /page1, /page2 ...  with same controller  and if missing action run name of controller method
+define('DEFAULT_CONT', ''); // default controller preselect for  controller. for example actions: /page1, /page2 ...  with same controller  and if missing action run name of controller method
 define('AUTO_RENDER_VIEW', true); // auto render phtml  file in  views folder which matc controller/action.phtml
 define('INDEX_PATH', 'home'); // if missing controller or action in url  it select home/home action and view
 
-define('LANG_MODE', "php"); // false for disable,   if enabled: /en/home/page2 > it's ignore first path 2 chars (/en/), "json" for load key value from /langs/*.json file, "php" for import keyvalue from php file, "view" for render pages from /views/en/*, dont forget enable from _main.php
-define('LANG_DEFAULT', false); 
+define('LANG_MODE', ''); // false for disable,   if enabled: /en/home/page2 > it's ignore first path 2 chars (/en/), "json" for load key value from /langs/*.json file, "php" for import keyvalue from php file, "view" for render pages from /views/en/*, dont forget enable from _main.php
+define('LANG_DEFAULT', false); // redirect if its set like /en/
 define('LANG_FOLDER',ROOT_PATH. '/langs/');
 
 define('DB_HOST', '127.0.0.1');

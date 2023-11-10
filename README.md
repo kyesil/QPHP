@@ -10,7 +10,7 @@
 - Render custom view
 - Execute custom action
 - Multi language support from json file. look config.php file. For set and start language: look `controllers/_main.php`  file 
-- Live example here http://kyesil.42web.io/ on infinityfree host
+- Live example here http://qphp.wuaze.com/ on infinityfree host
 
 # Install
 Works with :

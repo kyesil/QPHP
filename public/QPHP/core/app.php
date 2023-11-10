@@ -38,27 +38,26 @@ class Q_APP
 
    function start()
    {
-  
+
       if (!empty(BASE_URL)) {
          $url = substr(URI_PATH, strlen(BASE_URL)); //remove first char
       } else $url = URI_PATH;
 
       $urllang = null;
-      $viewpath=APP_PATH . '/views/';
+      $viewpath = APP_PATH . '/views/';
       if (LANG_MODE) {
          $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
          if (LANG_MODE === 'view') {
             if (!strlen($urllang) > 0) {
-               header('Location: ./'.LANG_DEFAULT.'/');
+               header('Location: ./' . LANG_DEFAULT . '/');
                // $urllang='en';
                exit('301');
             }
-           $viewpath=APP_PATH . "/views/$urllang/";
-           if(!is_dir($viewpath))$viewpath=APP_PATH . '/views/'.LANG_DEFAULT.'/';
-         } 
-            
-      } 
+            $viewpath = APP_PATH . "/views/$urllang/";
+            if (!is_dir($viewpath)) $viewpath = APP_PATH . '/views/' . LANG_DEFAULT . '/';
+         }
+      }
       define('V_PATH', $viewpath);
       $paths = explode('/', ($url));
       $cont = INDEX_PATH;
@@ -69,12 +68,16 @@ class Q_APP
          list($cont, $action) = $routeResult;
       elseif (!empty(DEFAULT_CONT)) {
          $cont = DEFAULT_CONT;
-         if (!empty($paths[1]))
+         if (!empty($paths[2])) {
+            qwput($paths);
+            $cont = $paths[1];
+            $action = $paths[2];
+         } elseif (!empty($paths[1]))
             $action = $paths[1];
       } else {
 
          if (!empty($paths[3]) && is_dir(C_PATH . $paths[1])) { // sub controller
-            $paths[1] = $paths[1] . "/" . $paths[2];
+            $paths[1] = $paths[1] . '/' . $paths[2];
             $paths[2] = $paths[3];
          }
 
@@ -97,7 +100,7 @@ class Q_APP
       if (!defined('ROUTE_LIST'))  return null;
 
       foreach (ROUTE_LIST as $key => $value) {
-         if (strpos($url, $key) !== false)
+         if (strpos($url, $key) === 0)
             return $value;
       }
       return null;
@@ -122,10 +125,10 @@ class Q_APP
    }
    public static function escapeDir($str)
    {
-     return preg_replace("/[^a-zA-Z0-9]+/", '', $str);
+      return preg_replace("/[^a-zA-Z0-9]+/", '', $str);
    }
 
-   public static  function error($code, $msg,$viewVars=null,$raw = false)
+   public static  function error($code, $msg, $viewVars = null, $raw = false)
    {
       http_response_code($code);
       if (is_array($viewVars))
