@@ -5,55 +5,51 @@ class LH
     public static $lid = '';
     public static $cacheTimeout = 3600;
 
-    public static function t($key) //transform function for view or actions 
+    public static function t($key) //transform text function for view or actions 
     {
         if (isset(LH::$dict[$key]))
             return LH::$dict[$key];
         else {
-            LH::missKey($key);
+            //LH::missKey($key); //activate the keys which is not fount  put a file
             return  $key;
         }
     }
 
 
-    public static function langLoad($filePath)
+    public static function langLoad($langFile)
     {
-        $content = file_get_contents($filePath);
-        LH::$dict =  json_decode($content, true);
-    }
+        $isFileExist = file_exists($langFile);
+        if (!$isFileExist) return LH::$dict = [];
 
+        if (LANG_MODE == "php") {
+            include_once $langFile; //export $LDATA
+            return $LDATA;
+        }
+        $content = file_get_contents($langFile);
+        return json_decode($content, true);
+    }
 
     public static function langCheck($lid)
     {
         LH::$lid = Q_APP::escapeDir($lid);
         if (!empty(LH::$dict)) return;  //dont touch next reload.
-        $langFile = LANG_FOLDER . LH::$lid . '.json';
-        $isFileExist = file_exists($langFile);
-        if (!$isFileExist) return LH::$dict = [];
-        if (!function_exists('apcu_store'))  //can cache ?
-            return LH::langLoad($langFile);
-
-        $cachetime = LH::g('lang_' . LH::$lid. '_time');
-        if (time() - $cachetime <= LH::$cacheTimeout) {
-            LH::$dict =  LH::g('lang_' . LH::$lid . '_data');
-            if (LH::$dict && !empty(LH::$dict)) return;
-        }
-
-        $changeTime = filemtime($langFile);
-
-        if (!$cachetime || $changeTime > $cachetime || time() - $cachetime > LH::$cacheTimeout) {
-            LH::langLoad($langFile);
-            LH::s('lang_' . $lid . '_data', LH::$dict);
-            LH::s('lang_' . $lid . '_time', time());
-        }
+        $langFile = LANG_FOLDER . LH::$lid . '.' . LANG_MODE; // /langs/en.json or   /langs/en.php
+        return LH::$dict = LH::langLoad($langFile);
     }
 
     public static function missKey($key)
     {
         if (!defined('DEV_MODE'))
             return;
-        // $line = time() . '|'.$key . '|' . $_SERVER['REQUEST_URI'] . "\n";
-        // file_put_contents(LANG_FOLDER . LH::$lid . '_.bak', $line,FILE_APPEND);
+        $mfile = LANG_FOLDER . LH::$lid . '_missed.txt';
+        if (file_exists($mfile)) {
+            $content = file_get_contents($mfile);
+            $missed = json_decode($content, true);
+            $missed[$key] = $_SERVER['REQUEST_URI'];
+        } else {
+            $missed = [$key => $_SERVER['REQUEST_URI']];
+        }
+        file_put_contents(LANG_FOLDER . LH::$lid . '_missed.txt', json_encode($missed));
     }
 
     public static function langList()
