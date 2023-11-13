@@ -48,12 +48,11 @@ class Q_APP
       if (LANG_MODE) {
          $urllang = Q_APP::escapeDir(substr($url, 1, 2));
          $url = substr($url, 3);  //remove /en
+         if (!strlen($urllang) > 0 && !empty(LANG_DEFAULT)) {
+            header('Location: ./' . LANG_DEFAULT . '/');
+            exit('301');
+         }
          if (LANG_MODE === 'view') {
-            if (!strlen($urllang) > 0) {
-               header('Location: ./' . LANG_DEFAULT . '/');
-               // $urllang='en';
-               exit('301');
-            }
             $viewpath = APP_PATH . "/views/$urllang/";
             if (!is_dir($viewpath)) $viewpath = APP_PATH . '/views/' . LANG_DEFAULT . '/';
          }
