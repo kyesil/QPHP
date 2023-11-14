@@ -45,20 +45,23 @@ class Q_APP
 
       $urllang = null;
       $viewpath = APP_PATH . '/views/';
+      $paths = explode('/', $url);
+
       if (LANG_MODE) {
-         $urllang = Q_APP::escapeDir(substr($url, 1, 2));
-         $url = substr($url, 3);  //remove /en
-         if (!strlen($urllang) > 0 && !empty(LANG_DEFAULT)) {
+         if (strlen($paths[1]) === 0 && !empty(LANG_DEFAULT)) { //if home url redirect to default lang
             header('Location: ./' . LANG_DEFAULT . '/');
             exit('301');
-         }
-         if (LANG_MODE === 'view') {
-            $viewpath = APP_PATH . "/views/$urllang/";
-            if (!is_dir($viewpath)) $viewpath = APP_PATH . '/views/' . LANG_DEFAULT . '/';
+         } elseif (strlen($paths[1]) === 2) {// if length 2 it's lang else go ehead
+            $urllang = Q_APP::escapeDir($paths[1]);
+            $paths = array_slice($paths, 1); //remove first element
+            if (LANG_MODE === 'view') {
+               $viewpath = APP_PATH . "/views/$urllang/";
+               if (!is_dir($viewpath) && !empty(LANG_DEFAULT)) $viewpath = APP_PATH . '/views/' . LANG_DEFAULT . '/';
+            }
          }
       }
+      
       define('V_PATH', $viewpath);
-      $paths = explode('/', ($url));
       $cont = INDEX_PATH;
       $action = INDEX_PATH;
 
@@ -68,7 +71,6 @@ class Q_APP
       elseif (!empty(DEFAULT_CONT)) {
          $cont = DEFAULT_CONT;
          if (!empty($paths[2])) {
-            qwput($paths);
             $cont = $paths[1];
             $action = $paths[2];
          } elseif (!empty($paths[1]))
@@ -111,16 +113,6 @@ class Q_APP
       foreach ($files as $key => $value) {
          include  $value;
       }
-
-      // $getincPath = get_include_path();
-      // $autoIncludes = L_PATH;
-      // if (is_dir($getincPath))
-      //    $autoIncludes .=  PATH_SEPARATOR . $getincPath;
-      // if (is_dir(M_PATH))
-      //    $autoIncludes .= PATH_SEPARATOR . M_PATH;
-      // set_include_path($autoIncludes);
-      // spl_autoload_register();
-
    }
    public static function escapeDir($str)
    {

@@ -6,8 +6,8 @@ define('DEFAULT_CONT', ''); // default controller preselect for  controller. for
 define('AUTO_RENDER_VIEW', true); // auto render phtml  file in  views folder which matc controller/action.phtml
 define('INDEX_PATH', 'home'); // if missing controller or action in url  it select home/home action and view
 
-define('LANG_MODE', ''); // false for disable,   if enabled: /en/home/page2 > it's ignore first path 2 chars (/en/), "json" for load key value from /langs/*.json file, "php" for import keyvalue from php file, "view" for render pages from /views/en/*, dont forget enable from _main.php
-define('LANG_DEFAULT', false); // redirect if its set like /en/ , for browser lang :  substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)
+define('LANG_MODE', 'php'); // false for disable,   if enabled: /en/home/page2 > it's ignore first path 2 chars (/en/), "json" for load key value from /langs/*.json file, "php" for import keyvalue from php file, "view" for render pages from /views/en/*, dont forget enable from _main.php
+define('LANG_DEFAULT', substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)??"en"); // it' set browser lang.   if both set LANG_DEFAULT && LANG_MODE  it's force redirect a default like /en/.  pages accessible only a lang that provide from url
 define('LANG_FOLDER',ROOT_PATH. '/langs/');
 
 define('DB_HOST', '127.0.0.1');
