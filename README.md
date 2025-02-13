@@ -2,7 +2,7 @@
 
  ## Specs
 - Create a service api controller. looks like standard MVC 
-- Simplified PDO helper. example in app\controllers\Svc.php
+- Simplified PDO helper. example in app\controllers\api.php
 - Support base URL/PATH like www.example.com/en/home/home or  www.example.com/mydir/home/home. look here: `app/qconfig.php`
 - Support default controller or/and action example www.example.com/ means home controller and home action.
 - Support preselect controller. route only one controller's actions 
@@ -50,6 +50,7 @@ location / {
 ## Usage with Docker 
 - Look `dev.Dockerfile` and  `docker-compose.yml`
 - `docker compose up`
+- `docker compose down --rmi all --volumes --remove-orphans`
 
 # Request Lifecycle
 - Apache, nginx or built-in server (webserver app) handle request and redirect site root folder: for example `...../public/`
@@ -69,8 +70,16 @@ location / {
 - If you need work with url for multi language like `/en/home/page2` , You need activate `LANG_FROM_URL` in your `qconfig.php` file. Then QPHP ignore first 2 char from your request url. then send the lang code as parameter to your controller. Then you should activate in your main controller like `LH::langCheck($cont->lang);` look omur example here: `/public/app/controllers/_main.php`
 - For detect the missing key you can activate missingKey module. It can detect missing key and log file look: /langs/
 
+
+## basic auth
+-  check at public/QPHP/library/sessH.php  & /public/app/controllers/admin.php
+
+## flood control api limitter
+-  check at public/QPHP/library/bootH.php  &&  /public/app/controllers/api.php
+
+
 # DB library 
-- examples here `/public/app/controllers/svc.php`
+- examples here `/public/app/controllers/api.php`
 # Benchmark only apache nginx
 -  npm i -g autocannon
-- autocannon -c 100 -d 10 -p 10  http://localhost/svc/home
+- autocannon -c 100 -d 10 -p 10  http://localhost/api/get

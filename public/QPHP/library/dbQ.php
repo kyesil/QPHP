@@ -99,7 +99,7 @@ class dbQuery
   }
   public function one($params, $getSql = false)
   {
-    if (!isset($this->limit)) $this->limit = "LIMIT 1";
+    $this->limit = "LIMIT 1";
     $sql = "SELECT $this->select FROM $this->table $this->joinSql  $this->where $this->group $this->order  $this->limit;";
     return  $getSql ? $sql : $this->dbc->one($sql, $params);
   }

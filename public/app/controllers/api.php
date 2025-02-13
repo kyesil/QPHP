@@ -1,5 +1,5 @@
 <?php
-class SvcC extends Q_Controller
+class ApiC extends Q_Controller
 {
   function _init()
   {
@@ -10,6 +10,8 @@ class SvcC extends Q_Controller
   }
   public function get()
   {
+    bootH::floodCount("get", 60, 4);
+    
     // get array object method 1
     $db = dbC::getDB();
     $data = $db->all("SELECT * FROM testtable WHERE categoryID=:categoryID ;", ["categoryID" => "12"]);
