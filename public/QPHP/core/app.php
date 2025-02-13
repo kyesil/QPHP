@@ -77,7 +77,7 @@ class Q_APP
             $action = $paths[1];
       } else {
 
-         if (is_dir(C_PATH . $paths[1])) { // sub controller
+         if (!empty($paths[1])&& is_dir(C_PATH . $paths[1])) { // sub controller
             $paths[1] = $paths[1] . '/' .(empty($paths[2])?INDEX_PATH:$paths[2]);
             $paths[2] = empty($paths[3])?INDEX_PATH:$paths[3];
          }
